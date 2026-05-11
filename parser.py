@@ -4,25 +4,31 @@ ip_counter = {}
 successful_logins = {}
 sudo_commands = []
 
-with open('test.log', 'r') as file:
-    for line in file:
-        if 'Failed password' in line:
-            parts = line.strip().split()
+try:
+    file = open('/var/log/auth.log', 'r')
+except FileNotFoundError:
+    print("Error: Log file not found")
+    exit()
 
-            if "from" in parts:
-                index = parts.index("from") + 1
-                ip = parts[index]
-                ip_counter[ip] = ip_counter.get(ip, 0) + 1
-        elif 'Accepted password' in line:
-            parts = line.strip().split()
+for line in file:
+    if 'Failed password' in line:
+        parts = line.strip().split()
+        if "from" in parts:
+            index = parts.index("from") + 1
+            ip = parts[index]
+            ip_counter[ip] = ip_counter.get(ip, 0) + 1
 
-            if "for" in parts:
-                index = parts.index("for") + 1
-                username = parts[index]
-                successful_logins[username] = successful_logins.get(username, 0) + 1
-        elif 'sudo' in line and 'COMMAND=' in line:
-            command = line.split('COMMAND=')[1].strip()
-            sudo_commands.append(command)
+    elif 'Accepted password' in line:
+        parts = line.strip().split()
+        if "for" in parts:
+            index = parts.index("for") + 1
+            username = parts[index]
+            successful_logins[username] = successful_logins.get(username, 0) + 1
+
+    elif 'COMMAND=' in line:
+        command = line.split('COMMAND=')[-1].strip()
+        sudo_commands.append(command)
+
 print("================================")
 print("Initiating log analysis report")
 print("================================")

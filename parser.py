@@ -33,3 +33,13 @@ print("\nSuccessful logins:\n")
 for user, count in successful_logins.items():
     print(f"{user}: {count} successful logins")
 
+sudo_commands = []
+
+with open('test.log', 'r') as file:
+    for line in file:
+        if 'sudo' in line and 'COMMAND=' in line:
+            command = line.split('COMMAND=')[1].strip()
+            sudo_commands.append(command)
+print("\nSudo commands executed:\n")
+for command in sudo_commands:
+    print(command)

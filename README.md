@@ -44,5 +44,4 @@ Sudo commands executed:
 
 - Python 3.12.3
 - Linux system with /var/log/auth.log
-```
 
